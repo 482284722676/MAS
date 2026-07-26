@@ -122,6 +122,17 @@ function changePassword(newPassword) {
   });
 }
 
+function getNextItemNumber() {
+  return getMergedList().then(function(items) {
+    var maxNum = 0;
+    items.forEach(function(item) {
+      var n = parseInt(item.item_number.replace('MAS-', ''));
+      if (n > maxNum) maxNum = n;
+    });
+    return 'MAS-' + String(maxNum + 1).padStart(3, '0');
+  });
+}
+
 // ─── Anomalies (Public - 只返回已审核的) ───
 function getAnomalies(params) {
   return getMergedList().then(function(items) {

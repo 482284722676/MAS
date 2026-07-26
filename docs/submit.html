@@ -33,8 +33,7 @@
     <form id="submitForm" style="margin-top:32px;">
       <div class="form-group">
         <label>项目编号 *</label>
-        <input type="text" id="item_number" placeholder="例如：MAS-021" required>
-        <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">格式：MAS-后接数字，请勿使用已存在的编号</p>
+        <input type="text" id="item_number" placeholder="系统自动分配" readonly>
       </div>
       <div class="form-group">
         <label>项目标题 *</label>
@@ -83,6 +82,10 @@
     document.getElementById('navbarLinks').classList.toggle('open');
   });
 
+  getNextItemNumber().then(function(nextNum) {
+    document.getElementById('item_number').value = nextNum;
+  });
+
   document.getElementById('submitForm').addEventListener('submit', function(e) {
     e.preventDefault();
     var data = {
@@ -97,14 +100,6 @@
 
     if (!data.item_number || !data.title || !data.cls || !data.containment_procedures || !data.description) {
       msg.textContent = '请填写所有必填字段';
-      msg.style.display = 'block';
-      msg.style.color = 'var(--accent)';
-      msg.style.border = '1px solid var(--accent)';
-      return;
-    }
-
-    if (!/^MAS-\d+$/.test(data.item_number)) {
-      msg.textContent = '项目编号格式不正确，请使用 MAS-数字 的格式';
       msg.style.display = 'block';
       msg.style.color = 'var(--accent)';
       msg.style.border = '1px solid var(--accent)';
