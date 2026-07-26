@@ -42,7 +42,14 @@
   <div class="container">
     <h2 class="section-title">等级体系</h2>
     <p class="section-subtitle">异常项目依其收容难度与危险程度分为六个等级</p>
-    <div class="anomaly-grid" id="classGrid"></div>
+    <div class="anomaly-grid" id="classGrid">
+<div class="anomaly-card" style="border-left:3px solid var(--safe)" onclick="location.href='anomalies.html?class=Safe'"><span class="class-badge Safe">Safe</span><h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">Safe 级</h3><p style="font-size:13px;color:var(--text-secondary);">易于安全收容的异常项目</p></div>
+<div class="anomaly-card" style="border-left:3px solid var(--euclid)" onclick="location.href='anomalies.html?class=Euclid'"><span class="class-badge Euclid">Euclid</span><h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">Euclid 级</h3><p style="font-size:13px;color:var(--text-secondary);">需要更多资源收容的异常项目</p></div>
+<div class="anomaly-card" style="border-left:3px solid var(--keter)" onclick="location.href='anomalies.html?class=Keter'"><span class="class-badge Keter">Keter</span><h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">Keter 级</h3><p style="font-size:13px;color:var(--text-secondary);">极难持续安全收容的异常项目</p></div>
+<div class="anomaly-card" style="border-left:3px solid var(--thaumiel)" onclick="location.href='anomalies.html?class=Thaumiel'"><span class="class-badge Thaumiel">Thaumiel</span><h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">Thaumiel 级</h3><p style="font-size:13px;color:var(--text-secondary);">用于收容其他异常的辅助项目</p></div>
+<div class="anomaly-card" style="border-left:3px solid var(--apollyon)" onclick="location.href='anomalies.html?class=Apollyon'"><span class="class-badge Apollyon">Apollyon</span><h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">Apollyon 级</h3><p style="font-size:13px;color:var(--text-secondary);">无法收容的世界级威胁</p></div>
+<div class="anomaly-card" style="border-left:3px solid var(--neutralized)" onclick="location.href='anomalies.html?class=Neutralized'"><span class="class-badge Neutralized">Neutralized</span><h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">Neutralized 级</h3><p style="font-size:13px;color:var(--text-secondary);">已被摧毁或失去异常特性</p></div>
+    </div>
   </div>
 </section>
 
@@ -50,7 +57,14 @@
   <div class="container">
     <h2 class="section-title">近期档案</h2>
     <p class="section-subtitle">最新入库的异常项目档案</p>
-    <div class="anomaly-grid" id="recentGrid"></div>
+    <div class="anomaly-grid" id="recentGrid">
+<div class="anomaly-card" onclick="location.href='detail.html?id=20'"><div class="anomaly-card-header"><span class="anomaly-card-id">MAS-020</span><span class="class-badge Apollyon">Apollyon</span></div><div class="anomaly-card-title">末路之书</div><div class="anomaly-card-desc">...</div></div>
+<div class="anomaly-card" onclick="location.href='detail.html?id=19'"><div class="anomaly-card-header"><span class="anomaly-card-id">MAS-019</span><span class="class-badge Safe">Safe</span></div><div class="anomaly-card-title">星桥</div><div class="anomaly-card-desc">...</div></div>
+<div class="anomaly-card" onclick="location.href='detail.html?id=18'"><div class="anomaly-card-header"><span class="anomaly-card-id">MAS-018</span><span class="class-badge Keter">Keter</span></div><div class="anomaly-card-title">低语者</div><div class="anomaly-card-desc">...</div></div>
+<div class="anomaly-card" onclick="location.href='detail.html?id=17'"><div class="anomaly-card-header"><span class="anomaly-card-id">MAS-017</span><span class="class-badge Thaumiel">Thaumiel</span></div><div class="anomaly-card-title">归零方程式</div><div class="anomaly-card-desc">...</div></div>
+<div class="anomaly-card" onclick="location.href='detail.html?id=16'"><div class="anomaly-card-header"><span class="anomaly-card-id">MAS-016</span><span class="class-badge Euclid">Euclid</span></div><div class="anomaly-card-title">共感菌株</div><div class="anomaly-card-desc">...</div></div>
+<div class="anomaly-card" onclick="location.href='detail.html?id=15'"><div class="anomaly-card-header"><span class="anomaly-card-id">MAS-015</span><span class="class-badge Keter">Keter</span></div><div class="anomaly-card-title">虚空放逐者</div><div class="anomaly-card-desc">...</div></div>
+    </div>
     <div style="text-align:center;margin-top:32px;">
       <a href="anomalies.html" class="btn">查看全部档案</a>
     </div>
@@ -64,59 +78,12 @@
   </div>
 </footer>
 
-<script src="js/particles.js"></script>
-<script src="js/api.js"></script>
 <script>
 (function() {
-  document.getElementById('navbarToggle').addEventListener('click', function() {
+  var toggle = document.getElementById('navbarToggle');
+  if (toggle) toggle.addEventListener('click', function() {
     this.classList.toggle('open');
     document.getElementById('navbarLinks').classList.toggle('open');
-  });
-})();
-(function() {
-  var classes = [
-    { name: 'Safe', desc: '易于安全收容的异常项目', color: 'var(--safe)' },
-    { name: 'Euclid', desc: '需要更多资源收容的异常项目', color: 'var(--euclid)' },
-    { name: 'Keter', desc: '极难持续安全收容的异常项目', color: 'var(--keter)' },
-    { name: 'Thaumiel', desc: '用于收容其他异常的辅助项目', color: 'var(--thaumiel)' },
-    { name: 'Apollyon', desc: '无法收容的世界级威胁', color: 'var(--apollyon)' },
-    { name: 'Neutralized', desc: '已被摧毁或失去异常特性', color: 'var(--neutralized)' }
-  ];
-
-  var classGrid = document.getElementById('classGrid');
-  classes.forEach(function(cls) {
-    var card = document.createElement('div');
-    card.className = 'anomaly-card';
-    card.style.borderLeft = '3px solid ' + cls.color;
-    card.innerHTML =
-      '<span class="class-badge ' + cls.name + '">' + cls.name + '</span>' +
-      '<h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">' + cls.name + ' 级</h3>' +
-      '<p style="font-size:13px;color:var(--text-secondary);">' + cls.desc + '</p>';
-    card.onclick = function() { window.location.href = 'anomalies.html?class=' + cls.name; };
-    classGrid.appendChild(card);
-  });
-
-  getAnomalies({ limit: 6, page: 1 }).then(function(data) {
-    var grid = document.getElementById('recentGrid');
-    if (data.items.length === 0) {
-      grid.innerHTML = '<div class="empty">暂无档案</div>';
-      return;
-    }
-    data.items.forEach(function(item) {
-      var card = document.createElement('div');
-      card.className = 'anomaly-card';
-      card.innerHTML =
-        '<div class="anomaly-card-header">' +
-          '<span class="anomaly-card-id">' + item.item_number + '</span>' +
-          '<span class="class-badge ' + item.class + '">' + item.class + '</span>' +
-        '</div>' +
-        '<div class="anomaly-card-title">' + item.title + '</div>' +
-        '<div class="anomaly-card-desc">' + (item.description || '').replace(/\n/g, ' ').substring(0, 120) + '...</div>';
-      card.onclick = function() { window.location.href = 'detail.html?id=' + item.id; };
-      grid.appendChild(card);
-    });
-  }).catch(function() {
-    document.getElementById('recentGrid').innerHTML = '<div class="empty">加载失败</div>';
   });
 })();
 </script>
