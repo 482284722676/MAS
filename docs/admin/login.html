@@ -29,17 +29,17 @@
 <script>
 (function() {
   if (localStorage.getItem('mas_token')) {
-    verifyToken().then(() => {
+    verifyToken().then(function() {
       window.location.href = 'dashboard.html';
-    }).catch(() => {
+    }).catch(function() {
       localStorage.removeItem('mas_token');
     });
   }
 
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const password = document.getElementById('password').value;
-    const errorDiv = document.getElementById('loginError');
+    var password = document.getElementById('password').value;
+    var errorDiv = document.getElementById('loginError');
 
     if (!password) {
       errorDiv.textContent = '请输入管理员密码';
@@ -47,10 +47,10 @@
       return;
     }
 
-    login(password).then(data => {
+    login(password).then(function(data) {
       localStorage.setItem('mas_token', data.token);
       window.location.href = 'dashboard.html';
-    }).catch(err => {
+    }).catch(function(err) {
       errorDiv.textContent = err.message;
       errorDiv.style.display = 'block';
     });

@@ -77,10 +77,10 @@
 <script src="../js/api.js"></script>
 <script>
 (function() {
-  const token = localStorage.getItem('mas_token');
+  var token = localStorage.getItem('mas_token');
   if (!token) { window.location.href = 'login.html'; return; }
 
-  verifyToken().catch(() => { window.location.href = 'login.html'; });
+  verifyToken().catch(function() { window.location.href = 'login.html'; });
 
   window.logout = function() {
     localStorage.removeItem('mas_token');
@@ -143,27 +143,27 @@
     }
   }).catch(function() {});
 
-  getStats().then(data => {
-    const grid = document.getElementById('statsGrid');
-    let html = `<div class="stat-card total">
-      <div class="stat-value">${data.total}</div>
-      <div class="stat-label">档案总数</div>
-    </div>`;
+  getStats().then(function(data) {
+    var grid = document.getElementById('statsGrid');
+    var html = '<div class="stat-card total">' +
+      '<div class="stat-value">' + data.total + '</div>' +
+      '<div class="stat-label">档案总数</div>' +
+    '</div>';
 
-    const classColors = {
+    var classColors = {
       'Safe': 'var(--safe)', 'Euclid': 'var(--euclid)', 'Keter': 'var(--keter)',
       'Thaumiel': 'var(--thaumiel)', 'Apollyon': 'var(--apollyon)', 'Neutralized': 'var(--neutralized)'
     };
 
-    data.byClass.forEach(item => {
-      html += `<div class="stat-card" style="border-left:3px solid ${classColors[item.class] || 'var(--accent)'};">
-        <div class="stat-value" style="color:${classColors[item.class] || 'var(--accent)'};">${item.count}</div>
-        <div class="stat-label">${item.class}</div>
-      </div>`;
+    data.byClass.forEach(function(item) {
+      html += '<div class="stat-card" style="border-left:3px solid ' + (classColors[item.class] || 'var(--accent)') + ';">' +
+        '<div class="stat-value" style="color:' + (classColors[item.class] || 'var(--accent)') + ';">' + item.count + '</div>' +
+        '<div class="stat-label">' + item.class + '</div>' +
+      '</div>';
     });
     grid.innerHTML = html;
-  }).catch(err => {
-    document.getElementById('statsGrid').innerHTML = `<div class="empty">加载失败: ${err.message}</div>`;
+  }).catch(function(err) {
+    document.getElementById('statsGrid').innerHTML = '<div class="empty">加载失败: ' + err.message + '</div>';
   });
 })();
 </script>

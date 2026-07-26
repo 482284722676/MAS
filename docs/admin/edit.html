@@ -70,27 +70,27 @@
 <script src="../js/api.js"></script>
 <script>
 (function() {
-  const token = localStorage.getItem('mas_token');
+  var token = localStorage.getItem('mas_token');
   if (!token) { window.location.href = 'login.html'; return; }
 
-  verifyToken().catch(() => { window.location.href = 'login.html'; });
+  verifyToken().catch(function() { window.location.href = 'login.html'; });
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const editId = urlParams.get('id');
-  const isEdit = !!editId;
+  var urlParams = new URLSearchParams(window.location.search);
+  var editId = urlParams.get('id');
+  var isEdit = !!editId;
 
   if (isEdit) {
     document.getElementById('formTitle').textContent = '编辑异常项目';
     document.getElementById('headerTitle').textContent = '编辑异常项目';
     document.getElementById('submitBtn').textContent = '保存修改';
 
-    adminGetAnomaly(editId).then(item => {
+    adminGetAnomaly(editId).then(function(item) {
       document.getElementById('item_number').value = item.item_number;
       document.getElementById('title').value = item.title;
       document.getElementById('class').value = item.class;
       document.getElementById('containment_procedures').value = item.containment_procedures;
       document.getElementById('description').value = item.description;
-    }).catch(err => {
+    }).catch(function(err) {
       showToast(err.message, 'error');
     });
   } else {
@@ -102,7 +102,7 @@
   document.getElementById('anomalyForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const data = {
+    var data = {
       item_number: document.getElementById('item_number').value.trim(),
       title: document.getElementById('title').value.trim(),
       cls: document.getElementById('class').value,
@@ -115,14 +115,14 @@
       return;
     }
 
-    const action = isEdit
+    var action = isEdit
       ? updateAnomaly(editId, data)
       : createAnomaly(data);
 
-    action.then(() => {
+    action.then(function() {
       showToast(isEdit ? '修改已保存' : '项目已创建');
-      setTimeout(() => { window.location.href = 'manage.html'; }, 500);
-    }).catch(err => {
+      setTimeout(function() { window.location.href = 'manage.html'; }, 500);
+    }).catch(function(err) {
       showToast(err.message, 'error');
     });
   });

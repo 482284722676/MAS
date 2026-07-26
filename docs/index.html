@@ -74,7 +74,7 @@
   });
 })();
 (function() {
-  const classes = [
+  var classes = [
     { name: 'Safe', desc: '易于安全收容的异常项目', color: 'var(--safe)' },
     { name: 'Euclid', desc: '需要更多资源收容的异常项目', color: 'var(--euclid)' },
     { name: 'Keter', desc: '极难持续安全收容的异常项目', color: 'var(--keter)' },
@@ -83,41 +83,39 @@
     { name: 'Neutralized', desc: '已被摧毁或失去异常特性', color: 'var(--neutralized)' }
   ];
 
-  const classGrid = document.getElementById('classGrid');
-  classes.forEach(cls => {
-    const card = document.createElement('div');
+  var classGrid = document.getElementById('classGrid');
+  classes.forEach(function(cls) {
+    var card = document.createElement('div');
     card.className = 'anomaly-card';
-    card.style.borderLeft = `3px solid ${cls.color}`;
-    card.innerHTML = `
-      <span class="class-badge ${cls.name}">${cls.name}</span>
-      <h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">${cls.name} 级</h3>
-      <p style="font-size:13px;color:var(--text-secondary);">${cls.desc}</p>
-    `;
-    card.onclick = () => { window.location.href = `/anomalies.html?class=${cls.name}`; };
+    card.style.borderLeft = '3px solid ' + cls.color;
+    card.innerHTML =
+      '<span class="class-badge ' + cls.name + '">' + cls.name + '</span>' +
+      '<h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">' + cls.name + ' 级</h3>' +
+      '<p style="font-size:13px;color:var(--text-secondary);">' + cls.desc + '</p>';
+    card.onclick = function() { window.location.href = 'anomalies.html?class=' + cls.name; };
     classGrid.appendChild(card);
   });
 
-  getAnomalies({ limit: 6, page: 1 }).then(data => {
-    const grid = document.getElementById('recentGrid');
+  getAnomalies({ limit: 6, page: 1 }).then(function(data) {
+    var grid = document.getElementById('recentGrid');
     if (data.items.length === 0) {
       grid.innerHTML = '<div class="empty">暂无档案</div>';
       return;
     }
-    data.items.forEach(item => {
-      const card = document.createElement('div');
+    data.items.forEach(function(item) {
+      var card = document.createElement('div');
       card.className = 'anomaly-card';
-      card.innerHTML = `
-        <div class="anomaly-card-header">
-          <span class="anomaly-card-id">${item.item_number}</span>
-          <span class="class-badge ${item.class}">${item.class}</span>
-        </div>
-        <div class="anomaly-card-title">${item.title}</div>
-        <div class="anomaly-card-desc">${item.description.replace(/\n/g, ' ').substring(0, 120)}...</div>
-      `;
-      card.onclick = () => { window.location.href = `/detail.html?id=${item.id}`; };
+      card.innerHTML =
+        '<div class="anomaly-card-header">' +
+          '<span class="anomaly-card-id">' + item.item_number + '</span>' +
+          '<span class="class-badge ' + item.class + '">' + item.class + '</span>' +
+        '</div>' +
+        '<div class="anomaly-card-title">' + item.title + '</div>' +
+        '<div class="anomaly-card-desc">' + (item.description || '').replace(/\n/g, ' ').substring(0, 120) + '...</div>';
+      card.onclick = function() { window.location.href = 'detail.html?id=' + item.id; };
       grid.appendChild(card);
     });
-  }).catch(() => {
+  }).catch(function() {
     document.getElementById('recentGrid').innerHTML = '<div class="empty">加载失败</div>';
   });
 })();
