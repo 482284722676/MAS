@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理登录 - MAS 协会</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-page">
+
+<div class="login-box">
+  <div class="login-logo">MAS</div>
+  <div class="login-subtitle">管理员登录</div>
+  <form id="loginForm">
+    <div class="form-group">
+      <label>管理员密码</label>
+      <input type="password" id="password" placeholder="输入管理员密码" required>
+    </div>
+    <button type="submit" class="btn btn-primary" style="width:100%;">授权进入</button>
+  </form>
+  <div class="login-error" id="loginError" style="display:none;"></div>
+  <p style="margin-top: 24px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">
+    默认密码：MAS
+  </p>
+</div>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  if (localStorage.getItem('mas_token')) {
+    verifyToken().then(() => {
+      window.location.href = '/admin/dashboard.html';
+    }).catch(() => {
+      localStorage.removeItem('mas_token');
+    });
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('loginError');
+
+    if (!password) {
+      errorDiv.textContent = '请输入管理员密码';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    login(password).then(data => {
+      localStorage.setItem('mas_token', data.token);
+      window.location.href = '/admin/dashboard.html';
+    }).catch(err => {
+      errorDiv.textContent = err.message;
+      errorDiv.style.display = 'block';
+    });
+  });
+})();
+</script>
+</body>
+</html>

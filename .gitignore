@@ -1,0 +1,4 @@
+node_modules/
+mas_data.db
+mas_data.db-shm
+mas_data.db-wal

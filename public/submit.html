@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提交档案 - MAS 协会</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>协会</span></a>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-links" id="navbarLinks">
+      <li><a href="/" target="_blank">首页</a></li>
+      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
+      <li><a href="/about.html">关于</a></li>
+      <li><a href="/report.html">意见建议</a></li>
+      <li><a href="/submit.html" class="active">提交档案</a></li>
+      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" style="max-width:800px;">
+    <h2 class="section-title">提交异常档案</h2>
+    <p class="section-subtitle">提交你发现的异常项目信息，经管理员审核后公开发布</p>
+
+    <form id="submitForm" style="margin-top:32px;">
+      <div class="form-group">
+        <label>项目编号 *</label>
+        <input type="text" id="item_number" placeholder="例如：MAS-021" required>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">格式：MAS-后接数字，请勿使用已存在的编号</p>
+      </div>
+      <div class="form-group">
+        <label>项目标题 *</label>
+        <input type="text" id="title" placeholder="异常项目名称" required>
+      </div>
+      <div class="form-group">
+        <label>项目等级 *</label>
+        <select id="class" required>
+          <option value="">-- 选择等级 --</option>
+          <option value="Safe">Safe - 安全</option>
+          <option value="Euclid">Euclid - 欧几里得</option>
+          <option value="Keter">Keter - 凯特</option>
+          <option value="Thaumiel">Thaumiel - 萨米埃尔</option>
+          <option value="Apollyon">Apollyon - 亚玻伦</option>
+          <option value="Neutralized">Neutralized - 已无效化</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>特殊收容措施 *</label>
+        <textarea id="containment_procedures" placeholder="描述该异常项目的收容、监控或处置方案..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>描述 *</label>
+        <textarea id="description" placeholder="详细描述该异常项目的特征、来源、异常效应..." required></textarea>
+      </div>
+      <div id="formMsg" style="display:none;padding:12px 16px;margin-bottom:16px;font-family:var(--font-mono);font-size:12px;"></div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">提交档案</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-text">MAS ASSOCIATION &copy; 2026 | 档案提交后需经管理员审核</p>
+  </div>
+</footer>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  document.getElementById('navbarToggle').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('navbarLinks').classList.toggle('open');
+  });
+
+  document.getElementById('submitForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var data = {
+      item_number: document.getElementById('item_number').value.trim(),
+      title: document.getElementById('title').value.trim(),
+      cls: document.getElementById('class').value,
+      containment_procedures: document.getElementById('containment_procedures').value.trim(),
+      description: document.getElementById('description').value.trim()
+    };
+    var msg = document.getElementById('formMsg');
+    var btn = document.getElementById('submitBtn');
+
+    if (!data.item_number || !data.title || !data.cls || !data.containment_procedures || !data.description) {
+      msg.textContent = '请填写所有必填字段';
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent)';
+      msg.style.border = '1px solid var(--accent)';
+      return;
+    }
+
+    if (!/^MAS-\d+$/.test(data.item_number)) {
+      msg.textContent = '项目编号格式不正确，请使用 MAS-数字 的格式';
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent)';
+      msg.style.border = '1px solid var(--accent)';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '提交中...';
+
+    fetch('/api/anomalies/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      msg.textContent = data.message || data.error || '提交成功';
+      msg.style.display = 'block';
+      if (data.message) {
+        msg.style.color = 'var(--safe)';
+        msg.style.border = '1px solid var(--safe)';
+        document.getElementById('submitForm').reset();
+      } else {
+        msg.style.color = 'var(--accent)';
+        msg.style.border = '1px solid var(--accent)';
+      }
+    }).catch(function(err) {
+      msg.textContent = '提交失败，请重试';
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent)';
+      msg.style.border = '1px solid var(--accent)';
+    }).finally(function() {
+      btn.disabled = false;
+      btn.textContent = '提交档案';
+    });
+  });
+})();
+</script>
+</body>
+</html>

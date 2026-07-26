@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于 - MAS 协会</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>协会</span></a>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-links" id="navbarLinks">
+      <li><a href="/" target="_blank">首页</a></li>
+      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
+      <li><a href="/about.html" class="active">关于</a></li>
+      <li><a href="/report.html">意见建议</a></li>
+      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" style="max-width:900px;">
+    <h2 class="section-title">关于 MAS</h2>
+    <p class="section-subtitle">Malignance Administration & Security — 异常管理与安全协会</p>
+
+    <div class="detail-block">
+      <h2>我们的使命</h2>
+      <p>MAS 协会致力于在全球范围内识别、收容、研究异常项目，保护人类文明免受未知威胁的侵害。我们相信，在已知世界之下，存在着人类尚无法理解的维度、现象和实体。协会的工作是在这些异常与常态之间建立起最后一道防线。</p>
+    </div>
+
+    <div class="detail-block">
+      <h2>组织架构</h2>
+      <p>O5 议会 — 最高决策机构，由 13 名成员组成，负责制定协会的战略方向和资源分配。</p>
+      <p style="margin-top:12px;">Site 网络 — 全球分布的秘密设施，每个 Site 负责特定地理区域或类型的异常项目收容与研究。</p>
+      <p style="margin-top:12px;">机动特遣队 (MTF) — 协会的武装反应力量，负责高风险异常项目的回收、护送和应急处置。</p>
+      <p style="margin-top:12px;">研究与分析部 — 负责异常项目的科学分析、逆向工程和应对方案开发。</p>
+    </div>
+
+    <div class="detail-block">
+      <h2>项目等级体系</h2>
+      <p>每一项被确认的异常项目都依据其收容难度和危险程度被赋予一个项目等级。这个等级系统帮助协会合理分配资源并制定适当的安保措施。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:16px;">
+        <div class="anomaly-card" style="border-left:3px solid var(--safe);cursor:default;">
+          <span class="class-badge Safe">Safe</span>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">可被安全、可靠地收容。对人员、环境和常态的威胁在可控范围内。</p>
+        </div>
+        <div class="anomaly-card" style="border-left:3px solid var(--euclid);cursor:default;">
+          <span class="class-badge Euclid">Euclid</span>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">收容需要更多资源，或对其行为的了解不充分而无法完全可靠地收容。</p>
+        </div>
+        <div class="anomaly-card" style="border-left:3px solid var(--keter);cursor:default;">
+          <span class="class-badge Keter">Keter</span>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">极难持续或可靠地收容，收容措施通常复杂且严苛。</p>
+        </div>
+        <div class="anomaly-card" style="border-left:3px solid var(--thaumiel);cursor:default;">
+          <span class="class-badge Thaumiel">Thaumiel</span>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">自身为异常但用于收容或对抗其他异常项目的辅助性项目。</p>
+        </div>
+        <div class="anomaly-card" style="border-left:3px solid var(--apollyon);cursor:default;">
+          <span class="class-badge Apollyon">Apollyon</span>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">无法收容，正积极威胁人类文明或整个生物圈的存在。</p>
+        </div>
+        <div class="anomaly-card" style="border-left:3px solid var(--neutralized);cursor:default;">
+          <span class="class-badge Neutralized">Neutralized</span>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">已永久失去异常特性，不再对人类文明构成威胁。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-block">
+      <h2>联系我们</h2>
+      <p>如果你发现了疑似异常的现象、物品或事件，请通过我们的「意见建议」页面提交报告。你所提供的信息可能对协会的工作起到关键作用。</p>
+      <p style="margin-top:12px;">所有举报均受协会保密协议保护。根据信息的重要程度，协会可能主动与你联系。</p>
+      <div style="margin-top:16px;">
+        <a href="/report.html" class="btn">提交报告 / 意见建议</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-text">MAS ASSOCIATION &copy; 2026 | 保护常态，收容异常</p>
+  </div>
+</footer>
+
+<script src="/js/particles.js"></script>
+<script>
+document.getElementById('navbarToggle').addEventListener('click', function() {
+  this.classList.toggle('open');
+  document.getElementById('navbarLinks').classList.toggle('open');
+});
+</script>
+</body>
+</html>

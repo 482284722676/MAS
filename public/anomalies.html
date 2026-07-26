@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>异常档案 - MAS 协会</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>协会</span></a>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-links" id="navbarLinks">
+      <li><a href="/" target="_blank">首页</a></li>
+      <li><a href="/anomalies.html" class="active">异常档案</a></li>
+      <li><a href="/submit.html" target="_blank">提交档案</a></li>
+      <li><a href="/about.html" target="_blank">关于</a></li>
+      <li><a href="/report.html" target="_blank">意见建议</a></li>
+      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">异常档案</h2>
+    <p class="section-subtitle">所有已归档的异常项目</p>
+
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索项目编号或标题...">
+      <div class="class-filter" id="classFilter">
+        <button class="filter-tag active" data-class="all">全部</button>
+        <button class="filter-tag" data-class="Safe">Safe</button>
+        <button class="filter-tag" data-class="Euclid">Euclid</button>
+        <button class="filter-tag" data-class="Keter">Keter</button>
+        <button class="filter-tag" data-class="Thaumiel">Thaumiel</button>
+        <button class="filter-tag" data-class="Apollyon">Apollyon</button>
+        <button class="filter-tag" data-class="Neutralized">Neutralized</button>
+      </div>
+    </div>
+
+    <div class="anomaly-grid" id="anomalyGrid"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-text">MAS FOUNDATION &copy; 2026</p>
+  </div>
+</footer>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  document.getElementById('navbarToggle').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('navbarLinks').classList.toggle('open');
+  });
+})();
+(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  let currentPage = 1;
+  let currentClass = urlParams.get('class') || 'all';
+  let currentSearch = '';
+
+  const searchInput = document.getElementById('searchInput');
+  const grid = document.getElementById('anomalyGrid');
+  const pagination = document.getElementById('pagination');
+
+  document.querySelectorAll('#classFilter .filter-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      document.querySelectorAll('#classFilter .filter-tag').forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+      currentClass = tag.dataset.class;
+      currentPage = 1;
+      loadAnomalies();
+    });
+  });
+
+  if (currentClass !== 'all') {
+    document.querySelectorAll('#classFilter .filter-tag').forEach(t => {
+      t.classList.toggle('active', t.dataset.class === currentClass);
+    });
+  }
+
+  let searchTimer;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      currentSearch = searchInput.value.trim();
+      currentPage = 1;
+      loadAnomalies();
+    }, 300);
+  });
+
+  function loadAnomalies() {
+    const params = { page: currentPage, limit: 12 };
+    if (currentClass !== 'all') params.class = currentClass;
+    if (currentSearch) params.search = currentSearch;
+
+    grid.innerHTML = '<div class="loading">加载中...</div>';
+
+    getAnomalies(params).then(data => {
+      if (data.items.length === 0) {
+        grid.innerHTML = '<div class="empty">没有找到匹配的异常项目</div>';
+        pagination.innerHTML = '';
+        return;
+      }
+
+      grid.innerHTML = data.items.map(item => `
+        <div class="anomaly-card" onclick="location.href='/detail.html?id=${item.id}'">
+          <div class="anomaly-card-header">
+            <span class="anomaly-card-id">${item.item_number}</span>
+            <span class="class-badge ${item.class}">${item.class}</span>
+          </div>
+          <div class="anomaly-card-title">${item.title}</div>
+          <div class="anomaly-card-desc">${item.description.replace(/\n/g, ' ').substring(0, 120)}...</div>
+        </div>
+      `).join('');
+
+      renderPagination(data.totalPages);
+    }).catch(() => {
+      grid.innerHTML = '<div class="empty">加载失败，请刷新重试</div>';
+    });
+  }
+
+  function renderPagination(totalPages) {
+    let html = '';
+    html += `<button ${currentPage <= 1 ? 'disabled' : ''} onclick="(function(){currentPage--;loadAnomalies();})()">上一页</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+      if (totalPages > 7 && i > 3 && i < totalPages - 2 && i !== currentPage) {
+        if (i === 4) html += '<span style="padding:8px;color:var(--text-muted);">...</span>';
+        continue;
+      }
+      html += `<button class="${i === currentPage ? 'active' : ''}" onclick="(function(){currentPage=${i};loadAnomalies();})()">${i}</button>`;
+    }
+    html += `<button ${currentPage >= totalPages ? 'disabled' : ''} onclick="(function(){currentPage++;loadAnomalies();})()">下一页</button>`;
+    pagination.innerHTML = html;
+    window.currentPage = currentPage;
+    window.loadAnomalies = loadAnomalies;
+  }
+
+  loadAnomalies();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">异常档案详情 - MAS 协会</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>协会</span></a>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-links" id="navbarLinks">
+      <li><a href="/" target="_blank">首页</a></li>
+      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
+      <li><a href="/submit.html" target="_blank">提交档案</a></li>
+      <li><a href="/about.html" target="_blank">关于</a></li>
+      <li><a href="/report.html" target="_blank">意见建议</a></li>
+      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" id="detailContainer">
+    <div class="loading">加载中...</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-text">MAS FOUNDATION &copy; 2026 | [机密档案]</p>
+  </div>
+</footer>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  document.getElementById('navbarToggle').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('navbarLinks').classList.toggle('open');
+  });
+})();
+(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+
+  if (!id) {
+    document.getElementById('detailContainer').innerHTML = '<div class="empty">未指定项目编号</div>';
+    return;
+  }
+
+  getAnomaly(id).then(item => {
+    document.title = `${item.item_number} - ${item.title}`;
+    document.getElementById('pageTitle').textContent = `${item.item_number} - ${item.title}`;
+
+    document.getElementById('detailContainer').innerHTML = `
+      <div class="detail-header">
+        <a href="/anomalies.html" class="back-link">&larr; 返回档案列表</a>
+        <div class="detail-meta">
+          <span class="detail-id">${item.item_number}</span>
+          <span class="class-badge ${item.class}">${item.class}</span>
+        </div>
+        <h1 class="detail-title">${item.title}</h1>
+      </div>
+
+      <div class="detail-divider"></div>
+
+      <div class="detail-block">
+        <h2>特殊收容措施</h2>
+        <p>${item.containment_procedures}</p>
+      </div>
+
+      <div class="detail-block">
+        <h2>描述</h2>
+        <p>${item.description}</p>
+      </div>
+
+      <div class="detail-divider"></div>
+
+      <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:1px;">
+        创建时间：${formatDate(item.created_at)}<br>
+        最后更新：${formatDate(item.updated_at)}
+      </p>
+    `;
+  }).catch(err => {
+    document.getElementById('detailContainer').innerHTML =
+      `<div class="empty">${err.message || '加载失败'}</div>`;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>档案审核 - MAS 管理后台</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>管理后台</span></a>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-title">导航</div>
+    <a href="/admin/dashboard.html">仪表盘</a>
+    <a href="/admin/manage.html">档案管理</a>
+    <a href="/admin/review.html" class="active">档案审核</a>
+    <a href="/admin/suggestions.html">意见建议</a>
+    <a href="/" target="_blank" style="margin-top:auto;">返回前台</a>
+  </aside>
+
+  <main class="admin-content">
+    <div class="admin-header">
+      <h1>档案审核</h1>
+      <button class="admin-logout" onclick="logout()">退出登录</button>
+    </div>
+
+    <p class="section-subtitle" style="margin-bottom:24px;">用户提交的档案需审核后方可公开发布</p>
+
+    <div class="anomaly-grid" id="reviewGrid">
+      <div class="loading">加载中...</div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </main>
+</div>
+
+<div id="detailOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;overflow-y:auto;padding:40px 20px;">
+  <div style="max-width:800px;margin:0 auto;">
+    <button onclick="closeDetail()" style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);background:none;border:1px solid var(--border-color);padding:8px 16px;cursor:pointer;margin-bottom:24px;">关闭</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  var token = localStorage.getItem('mas_token');
+  if (!token) { window.location.href = '/admin/login.html'; return; }
+  verifyToken().catch(function() { window.location.href = '/admin/login.html'; });
+
+  window.logout = function() {
+    localStorage.removeItem('mas_token');
+    window.location.href = '/admin/login.html';
+  };
+
+  var currentPage = 1;
+
+  function loadPending() {
+    var grid = document.getElementById('reviewGrid');
+    grid.innerHTML = '<div class="loading">加载中...</div>';
+
+    fetch('/api/anomalies/pending?page=' + currentPage, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.items.length === 0) {
+        grid.innerHTML = '<div class="empty">暂无待审核档案</div>';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      grid.innerHTML = data.items.map(function(item) {
+        return '<div class="anomaly-card" style="border-left:3px solid var(--euclid);">' +
+          '<div class="anomaly-card-header">' +
+            '<span class="anomaly-card-id">' + item.item_number + '</span>' +
+            '<span class="class-badge ' + item.class + '">' + item.class + '</span>' +
+          '</div>' +
+          '<div class="anomaly-card-title">' + item.title + '</div>' +
+          '<div class="anomaly-card-desc">' + item.description.replace(/\n/g, ' ').substring(0, 150) + '...</div>' +
+          '<div style="margin-top:16px;display:flex;gap:8px;">' +
+            '<button class="btn btn-sm" onclick="showDetail(' + item.id + ')">查看详情</button>' +
+            '<button class="btn btn-sm btn-primary" onclick="review(' + item.id + ',\'approve\')">通过</button>' +
+            '<button class="btn btn-sm btn-danger" onclick="review(' + item.id + ',\'reject\')">拒绝</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      renderPagination(data.totalPages);
+    }).catch(function() {
+      grid.innerHTML = '<div class="empty">加载失败</div>';
+    });
+  }
+
+  function renderPagination(totalPages) {
+    var html = '';
+    html += '<button ' + (currentPage <= 1 ? 'disabled' : '') + ' onclick="changePage(' + (currentPage - 1) + ')">上一页</button>';
+    for (var i = 1; i <= totalPages; i++) {
+      if (totalPages > 7 && i > 3 && i < totalPages - 2 && i !== currentPage) {
+        if (i === 4) html += '<span style="padding:8px;color:var(--text-muted);">...</span>';
+        continue;
+      }
+      html += '<button class="' + (i === currentPage ? 'active' : '') + '" onclick="changePage(' + i + ')">' + i + '</button>';
+    }
+    html += '<button ' + (currentPage >= totalPages ? 'disabled' : '') + ' onclick="changePage(' + (currentPage + 1) + ')">下一页</button>';
+    document.getElementById('pagination').innerHTML = html;
+  }
+
+  window.changePage = function(page) { currentPage = page; loadPending(); };
+
+  window.review = function(id, action) {
+    var label = action === 'approve' ? '通过' : '拒绝';
+    var msg = action === 'approve' ? '确认审核通过该档案？' : '确认拒绝并删除该档案？此操作不可撤销。';
+    if (!confirm(msg)) return;
+
+    fetch('/api/anomalies/' + id + '/review', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ action: action })
+    }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      showToast(data.message || ('已' + label));
+      loadPending();
+    }).catch(function(err) { showToast(err.message, 'error'); });
+  };
+
+  window.showDetail = function(id) {
+    fetch('/api/anomalies/' + id, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function(res) {
+      if (res.status === 404) {
+        return fetch('/api/anomalies/pending?limit=50', { headers: { 'Authorization': 'Bearer ' + token } })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var item = data.items.find(function(i) { return i.id === id; });
+            return item || null;
+          });
+      }
+      return res.json();
+    }).then(function(item) {
+      if (!item) { showToast('档案未找到', 'error'); return; }
+      document.getElementById('detailContent').innerHTML =
+        '<div class="detail-meta">' +
+          '<span class="detail-id">' + item.item_number + '</span>' +
+          '<span class="class-badge ' + item.class + '">' + item.class + '</span>' +
+        '</div>' +
+        '<h1 class="detail-title">' + item.title + '</h1>' +
+        '<div class="detail-divider"></div>' +
+        '<div class="detail-block"><h2>特殊收容措施</h2><p>' + item.containment_procedures + '</p></div>' +
+        '<div class="detail-block"><h2>描述</h2><p>' + item.description + '</p></div>';
+      document.getElementById('detailOverlay').style.display = 'block';
+    });
+  };
+
+  window.closeDetail = function() {
+    document.getElementById('detailOverlay').style.display = 'none';
+  };
+
+  loadPending();
+})();
+</script>
+</body>
+</html>

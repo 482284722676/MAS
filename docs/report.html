@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>意见建议 - MAS 协会</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>协会</span></a>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar-links" id="navbarLinks">
+      <li><a href="/" target="_blank">首页</a></li>
+      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
+      <li><a href="/about.html">关于</a></li>
+      <li><a href="/report.html" class="active">意见建议</a></li>
+      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" style="max-width:700px;">
+    <h2 class="section-title">意见建议</h2>
+    <p class="section-subtitle">报告疑似异常现象，或向我们提出改进建议</p>
+
+    <form id="suggestionForm" style="margin-top:32px;">
+      <div class="form-group">
+        <label>内容 *</label>
+        <textarea id="content" placeholder="描述你发现的异常现象，或写下你的建议..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>联系方式（选填）</label>
+        <input type="text" id="contact" placeholder="邮箱或其它联系方式（便于我们回复）">
+      </div>
+      <div id="formMsg" style="display:none;padding:12px 16px;margin-bottom:16px;font-family:var(--font-mono);font-size:12px;"></div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">提交反馈</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-text">MAS ASSOCIATION &copy; 2026 | 你的反馈对我们至关重要</p>
+  </div>
+</footer>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  document.getElementById('navbarToggle').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('navbarLinks').classList.toggle('open');
+  });
+
+  document.getElementById('suggestionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var content = document.getElementById('content').value.trim();
+    var contact = document.getElementById('contact').value.trim();
+    var msg = document.getElementById('msgDiv') || document.getElementById('formMsg');
+    var btn = document.getElementById('submitBtn');
+
+    if (!content) {
+      msg.textContent = '请输入内容';
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent)';
+      msg.style.border = '1px solid var(--accent)';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '提交中...';
+
+    submitSuggestion(content, contact).then(function(data) {
+      msg.textContent = data.message || '感谢您的反馈！';
+      msg.style.display = 'block';
+      msg.style.color = 'var(--safe)';
+      msg.style.border = '1px solid var(--safe)';
+      document.getElementById('content').value = '';
+      document.getElementById('contact').value = '';
+    }).catch(function(err) {
+      msg.textContent = err.message || '提交失败，请重试';
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent)';
+      msg.style.border = '1px solid var(--accent)';
+    }).finally(function() {
+      btn.disabled = false;
+      btn.textContent = '提交反馈';
+    });
+  });
+})();
+</script>
+</body>
+</html>

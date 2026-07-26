@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>意见建议管理 - MAS 管理后台</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>管理后台</span></a>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-title">导航</div>
+    <a href="/admin/dashboard.html">仪表盘</a>
+    <a href="/admin/manage.html">档案管理</a>
+    <a href="/admin/suggestions.html" class="active">意见建议</a>
+    <a href="/" target="_blank" style="margin-top:auto;">返回前台</a>
+  </aside>
+
+  <main class="admin-content">
+    <div class="admin-header">
+      <h1>意见建议</h1>
+      <button class="admin-logout" onclick="logout()">退出登录</button>
+    </div>
+
+    <table class="admin-table" id="suggestionTable">
+      <thead>
+        <tr>
+          <th>编号</th>
+          <th>内容</th>
+          <th>联系方式</th>
+          <th>提交时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="5"><div class="loading">加载中...</div></td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination" id="pagination"></div>
+  </main>
+</div>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  var token = localStorage.getItem('mas_token');
+  if (!token) { window.location.href = '/admin/login.html'; return; }
+
+  verifyToken().catch(function() { window.location.href = '/admin/login.html'; });
+
+  window.logout = function() {
+    localStorage.removeItem('mas_token');
+    window.location.href = '/admin/login.html';
+  };
+
+  var currentPage = 1;
+
+  function loadSuggestions() {
+    var tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '<tr><td colspan="5"><div class="loading">加载中...</div></td></tr>';
+
+    fetch('/api/suggestions?page=' + currentPage + '&limit=15', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty">暂无意见建议</div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.items.map(function(item) {
+        return '<tr>' +
+          '<td style="font-family:var(--font-mono);font-size:12px;">#' + item.id + '</td>' +
+          '<td style="max-width:400px;word-break:break-all;">' + item.content + '</td>' +
+          '<td style="font-size:12px;color:var(--text-muted);">' + (item.contact || '未提供') + '</td>' +
+          '<td style="font-size:12px;color:var(--text-muted);">' + formatDate(item.created_at) + '</td>' +
+          '<td><button class="btn btn-sm btn-danger" onclick="deleteSuggestion(' + item.id + ')">删除</button></td>' +
+          '</tr>';
+      }).join('');
+      renderPagination(data.totalPages);
+    }).catch(function(err) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="empty">加载失败</div></td></tr>';
+    });
+  }
+
+  function renderPagination(totalPages) {
+    var html = '';
+    html += '<button ' + (currentPage <= 1 ? 'disabled' : '') + ' onclick="changePage(' + (currentPage - 1) + ')">上一页</button>';
+    for (var i = 1; i <= totalPages; i++) {
+      if (totalPages > 7 && i > 3 && i < totalPages - 2 && i !== currentPage) {
+        if (i === 4) html += '<span style="padding:8px;color:var(--text-muted);">...</span>';
+        continue;
+      }
+      html += '<button class="' + (i === currentPage ? 'active' : '') + '" onclick="changePage(' + i + ')">' + i + '</button>';
+    }
+    html += '<button ' + (currentPage >= totalPages ? 'disabled' : '') + ' onclick="changePage(' + (currentPage + 1) + ')">下一页</button>';
+    document.getElementById('pagination').innerHTML = html;
+  }
+
+  window.changePage = function(page) { currentPage = page; loadSuggestions(); };
+
+  window.deleteSuggestion = function(id) {
+    if (!confirm('确认删除该条意见建议吗？')) return;
+    fetch('/api/suggestions/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(res) { return res.json(); })
+    .then(function() { showToast('已删除'); loadSuggestions(); })
+    .catch(function(err) { showToast(err.message, 'error'); });
+  };
+
+  loadSuggestions();
+})();
+</script>
+</body>
+</html>

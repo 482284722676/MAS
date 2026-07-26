@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="formTitle">新建异常项目 - MAS 管理后台</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand">MAS<span>管理后台</span></a>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-title">导航</div>
+    <a href="/admin/dashboard.html">仪表盘</a>
+    <a href="/admin/manage.html">档案管理</a>
+    <a href="/admin/review.html">档案审核</a>
+    <a href="/admin/suggestions.html">意见建议</a>
+    <a href="/" target="_blank" style="margin-top:auto;">返回前台</a>
+  </aside>
+
+  <main class="admin-content">
+    <div class="admin-header">
+      <h1 id="headerTitle">新建异常项目</h1>
+    </div>
+
+    <form id="anomalyForm" style="max-width:800px;">
+      <div class="form-group">
+        <label>项目编号 *</label>
+        <input type="text" id="item_number" placeholder="例如：MAS-008" required>
+      </div>
+      <div class="form-group">
+        <label>项目标题 *</label>
+        <input type="text" id="title" placeholder="异常项目名称" required>
+      </div>
+      <div class="form-group">
+        <label>项目等级 *</label>
+        <select id="class" required>
+          <option value="">-- 选择等级 --</option>
+          <option value="Safe">Safe - 安全</option>
+          <option value="Euclid">Euclid - 欧几里得</option>
+          <option value="Keter">Keter - 凯特</option>
+          <option value="Thaumiel">Thaumiel - 萨米埃尔</option>
+          <option value="Apollyon">Apollyon - 亚玻伦</option>
+          <option value="Neutralized">Neutralized - 已无效化</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>特殊收容措施 *</label>
+        <textarea id="containment_procedures" placeholder="描述该异常项目的收容、监控或处置方案..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>描述 *</label>
+        <textarea id="description" placeholder="详细描述该异常项目的特征、来源、异常效应..." required></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">创建项目</button>
+        <a href="/admin/manage.html" class="btn">取消</a>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script src="/js/particles.js"></script>
+<script src="/js/api.js"></script>
+<script>
+(function() {
+  const token = localStorage.getItem('mas_token');
+  if (!token) { window.location.href = '/admin/login.html'; return; }
+
+  verifyToken().catch(() => { window.location.href = '/admin/login.html'; });
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get('id');
+  const isEdit = !!editId;
+
+  if (isEdit) {
+    document.getElementById('formTitle').textContent = '编辑异常项目';
+    document.getElementById('headerTitle').textContent = '编辑异常项目';
+    document.getElementById('submitBtn').textContent = '保存修改';
+
+    getAnomaly(editId).then(item => {
+      document.getElementById('item_number').value = item.item_number;
+      document.getElementById('title').value = item.title;
+      document.getElementById('class').value = item.class;
+      document.getElementById('containment_procedures').value = item.containment_procedures;
+      document.getElementById('description').value = item.description;
+    }).catch(err => {
+      showToast(err.message, 'error');
+    });
+  }
+
+  document.getElementById('anomalyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const data = {
+      item_number: document.getElementById('item_number').value.trim(),
+      title: document.getElementById('title').value.trim(),
+      cls: document.getElementById('class').value,
+      containment_procedures: document.getElementById('containment_procedures').value.trim(),
+      description: document.getElementById('description').value.trim()
+    };
+
+    if (!data.item_number || !data.title || !data.cls || !data.containment_procedures || !data.description) {
+      showToast('请填写所有必填字段', 'error');
+      return;
+    }
+
+    const action = isEdit
+      ? updateAnomaly(editId, data)
+      : createAnomaly(data);
+
+    action.then(() => {
+      showToast(isEdit ? '修改已保存' : '项目已创建');
+      setTimeout(() => { window.location.href = '/admin/manage.html'; }, 500);
+    }).catch(err => {
+      showToast(err.message, 'error');
+    });
+  });
+})();
+</script>
+</body>
+</html>
