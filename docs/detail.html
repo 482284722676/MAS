@@ -4,23 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageTitle">异常档案详情 - MAS 协会</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <nav class="navbar">
   <div class="container">
-    <a href="/" class="navbar-brand">MAS<span>协会</span></a>
+    <a href="./" class="navbar-brand">MAS<span>协会</span></a>
     <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
       <span></span><span></span><span></span>
     </button>
     <ul class="navbar-links" id="navbarLinks">
-      <li><a href="/" target="_blank">首页</a></li>
-      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
-      <li><a href="/submit.html" target="_blank">提交档案</a></li>
-      <li><a href="/about.html" target="_blank">关于</a></li>
-      <li><a href="/report.html" target="_blank">意见建议</a></li>
-      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+      <li><a href="./" target="_blank">首页</a></li>
+      <li><a href="anomalies.html" target="_blank">异常档案</a></li>
+      <li><a href="submit.html" target="_blank">提交档案</a></li>
+      <li><a href="about.html" target="_blank">关于</a></li>
+      <li><a href="report.html" target="_blank">意见建议</a></li>
+      <li><a href="admin/login.html" target="_blank">管理入口</a></li>
     </ul>
   </div>
 </nav>
@@ -37,8 +37,8 @@
   </div>
 </footer>
 
-<script src="/js/particles.js"></script>
-<script src="/js/api.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/api.js"></script>
 <script>
 (function() {
   document.getElementById('navbarToggle').addEventListener('click', function() {
@@ -61,7 +61,7 @@
 
     document.getElementById('detailContainer').innerHTML = `
       <div class="detail-header">
-        <a href="/anomalies.html" class="back-link">&larr; 返回档案列表</a>
+        <a href="anomalies.html" class="back-link">&larr; 返回档案列表</a>
         <div class="detail-meta">
           <span class="detail-id">${item.item_number}</span>
           <span class="class-badge ${item.class}">${item.class}</span>

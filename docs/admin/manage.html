@@ -4,31 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>档案管理 - MAS 管理后台</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <nav class="navbar">
   <div class="container">
-    <a href="/" class="navbar-brand">MAS<span>管理后台</span></a>
+    <a href="./" class="navbar-brand">MAS<span>管理后台</span></a>
   </div>
 </nav>
 
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <div class="admin-sidebar-title">导航</div>
-    <a href="/admin/dashboard.html">仪表盘</a>
-    <a href="/admin/manage.html" class="active">档案管理</a>
-    <a href="/admin/review.html">档案审核</a>
-    <a href="/admin/suggestions.html">意见建议</a>
-    <a href="/" target="_blank" style="margin-top:auto;">返回前台</a>
+    <a href="admin/dashboard.html">仪表盘</a>
+    <a href="admin/manage.html" class="active">档案管理</a>
+    <a href="admin/review.html">档案审核</a>
+    <a href="admin/suggestions.html">意见建议</a>
+    <a href="./" target="_blank" style="margin-top:auto;">返回前台</a>
   </aside>
 
   <main class="admin-content">
     <div class="admin-header">
       <h1>档案管理</h1>
       <div style="display:flex;gap:12px;">
-        <a href="/admin/edit.html" class="btn btn-primary">+ 新建项目</a>
+        <a href="admin/edit.html" class="btn btn-primary">+ 新建项目</a>
         <button class="admin-logout" onclick="logout()">退出登录</button>
       </div>
     </div>
@@ -52,8 +52,8 @@
   </main>
 </div>
 
-<script src="/js/particles.js"></script>
-<script src="/js/api.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/api.js"></script>
 <script>
 (function() {
   const token = localStorage.getItem('mas_token');
@@ -85,7 +85,7 @@
           <td style="font-size:12px;color:var(--text-muted);">${formatDate(item.updated_at)}</td>
           <td>
             <div class="actions">
-              <a href="/admin/edit.html?id=${item.id}" class="btn btn-sm">编辑</a>
+              <a href="admin/edit.html?id=${item.id}" class="btn btn-sm">编辑</a>
               <button class="btn btn-sm btn-danger" onclick="deleteItem(${item.id}, '${item.item_number}')">删除</button>
             </div>
           </td>
