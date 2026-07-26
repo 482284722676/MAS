@@ -17,11 +17,11 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <div class="admin-sidebar-title">导航</div>
-    <a href="admin/dashboard.html" class="active">仪表盘</a>
-    <a href="admin/manage.html">档案管理</a>
-    <a href="admin/review.html">档案审核</a>
-    <a href="admin/suggestions.html">意见建议</a>
-    <a href="./" target="_blank" style="margin-top:auto;">返回前台</a>
+    <a href="dashboard.html" class="active">仪表盘</a>
+    <a href="manage.html">档案管理</a>
+    <a href="review.html">档案审核</a>
+    <a href="suggestions.html">意见建议</a>
+    <a href="../index.html" target="_blank" style="margin-top:auto;">返回前台</a>
   </aside>
 
   <main class="admin-content">
@@ -74,17 +74,17 @@
 </div>
 
 <script src="js/particles.js"></script>
-<script src="js/api.js"></script>
+<script src="../js/api.js"></script>
 <script>
 (function() {
   const token = localStorage.getItem('mas_token');
-  if (!token) { window.location.href = '/admin/login.html'; return; }
+  if (!token) { window.location.href = 'login.html'; return; }
 
-  verifyToken().catch(() => { window.location.href = '/admin/login.html'; });
+  verifyToken().catch(() => { window.location.href = 'login.html'; });
 
   window.logout = function() {
     localStorage.removeItem('mas_token');
-    window.location.href = '/admin/login.html';
+    window.location.href = 'login.html';
   };
 
   window.showChangePwd = function() {
