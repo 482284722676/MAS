@@ -1,5 +1,15 @@
 const API_BASE = '/api';
 
+const CLASS_LABELS = {
+  S: '安全', A: '实用', N: '自然', C: '可控',
+  D: '神性', P: '危险', M: '气象', I: '无形',
+  R: '毁灭', E: '消逝'
+};
+
+function classLabel(code) {
+  return CLASS_LABELS[code] ? `${code} · ${CLASS_LABELS[code]}` : code;
+}
+
 async function request(url, options = {}) {
   const token = localStorage.getItem('mas_token');
   const headers = { 'Content-Type': 'application/json', ...options.headers };

@@ -15,12 +15,10 @@
       <span></span><span></span><span></span>
     </button>
     <ul class="navbar-links" id="navbarLinks">
-      <li><a href="/" target="_blank">首页</a></li>
+      <li><a href="/">首页</a></li>
       <li><a href="/anomalies.html" class="active">异常档案</a></li>
-      <li><a href="/submit.html" target="_blank">提交档案</a></li>
-      <li><a href="/about.html" target="_blank">关于</a></li>
-      <li><a href="/report.html" target="_blank">意见建议</a></li>
-      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+      <li><a href="/about.html">关于</a></li>
+      <li><a href="/report.html">投稿联络</a></li>
     </ul>
   </div>
 </nav>
@@ -34,12 +32,16 @@
       <input type="text" class="search-input" id="searchInput" placeholder="搜索项目编号或标题...">
       <div class="class-filter" id="classFilter">
         <button class="filter-tag active" data-class="all">全部</button>
-        <button class="filter-tag" data-class="Safe">Safe</button>
-        <button class="filter-tag" data-class="Euclid">Euclid</button>
-        <button class="filter-tag" data-class="Keter">Keter</button>
-        <button class="filter-tag" data-class="Thaumiel">Thaumiel</button>
-        <button class="filter-tag" data-class="Apollyon">Apollyon</button>
-        <button class="filter-tag" data-class="Neutralized">Neutralized</button>
+        <button class="filter-tag" data-class="S">S 安全</button>
+        <button class="filter-tag" data-class="A">A 实用</button>
+        <button class="filter-tag" data-class="N">N 自然</button>
+        <button class="filter-tag" data-class="C">C 可控</button>
+        <button class="filter-tag" data-class="D">D 神性</button>
+        <button class="filter-tag" data-class="P">P 危险</button>
+        <button class="filter-tag" data-class="M">M 气象</button>
+        <button class="filter-tag" data-class="I">I 无形</button>
+        <button class="filter-tag" data-class="R">R 毁灭</button>
+        <button class="filter-tag" data-class="E">E 消逝</button>
       </div>
     </div>
 
@@ -50,7 +52,7 @@
 
 <footer class="footer">
   <div class="container">
-    <p class="footer-text">MAS FOUNDATION &copy; 2026</p>
+    <p class="footer-text">MAS ASSOCIATION &copy; 2026</p>
   </div>
 </footer>
 
@@ -117,7 +119,7 @@
         <div class="anomaly-card" onclick="location.href='/detail.html?id=${item.id}'">
           <div class="anomaly-card-header">
             <span class="anomaly-card-id">${item.item_number}</span>
-            <span class="class-badge ${item.class}">${item.class}</span>
+            <span class="class-badge ${item.class}">${classLabel(item.class)}</span>
           </div>
           <div class="anomaly-card-title">${item.title}</div>
           <div class="anomaly-card-desc">${item.description.replace(/\n/g, ' ').substring(0, 120)}...</div>

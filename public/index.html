@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAS - 异常管理与安全组织</title>
+  <title>MAS - 异常管理与安全协会</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<nav class="navbar">
+<nav class="navbar" id="navbar">
   <div class="container">
     <a href="/" class="navbar-brand">MAS<span>协会</span></a>
     <button class="navbar-toggle" id="navbarToggle" aria-label="菜单">
@@ -16,50 +16,94 @@
     </button>
     <ul class="navbar-links" id="navbarLinks">
       <li><a href="/" class="active">首页</a></li>
-      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
-      <li><a href="/submit.html" target="_blank">提交档案</a></li>
+      <li><a href="/anomalies.html">异常档案</a></li>
       <li><a href="/about.html">关于</a></li>
-      <li><a href="/report.html">意见建议</a></li>
-      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+      <li><a href="/report.html">投稿联络</a></li>
     </ul>
   </div>
 </nav>
 
-<section class="hero">
-  <div class="container">
-    <div class="hero-logo">MAS</div>
-    <div class="hero-subtitle">Malignance Administration & Security</div>
+<header class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow hero-glow-a"></div>
+    <div class="hero-glow hero-glow-b"></div>
+    <div class="hero-scanline"></div>
+    <div class="hero-vignette"></div>
+  </div>
+
+  <div class="container hero-content">
+    <div class="hero-status">
+      <span class="status-dot"></span>
+      <span class="status-text" id="statusText">系统状态：运行正常</span>
+      <span class="status-code">// MAS-${`${Date.now()}`.slice(-4)}</span>
+    </div>
+
+    <h1 class="hero-logo">MAS</h1>
+    <div class="hero-subtitle">
+      <span class="type-target" id="typeTarget"></span><span class="type-cursor"></span>
+    </div>
+
     <p class="hero-desc">
       我们收容异常，保护常态。
-      MAS协会致力于识别、收容与研究全球范围内的异常项目，
+      天文协会致力于识别、收容与研究多元宇宙中的异常项目，
       确保人类文明的安全与延续。
     </p>
-    <a href="/anomalies.html" class="btn" target="_blank">查阅异常档案</a>
-  </div>
-</section>
 
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">等级体系</h2>
-    <p class="section-subtitle">异常项目依其收容难度与危险程度分为六个等级</p>
-    <div class="anomaly-grid" id="classGrid"></div>
-  </div>
-</section>
+    <div class="hero-actions">
+      <a href="/anomalies.html" class="btn btn-primary btn-cta" target="_blank">
+        <span>查阅异常档案</span>
+      </a>
+      <a href="/about.html" class="btn btn-outline btn-cta">
+        <span>了解协会</span>
+      </a>
+    </div>
 
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">近期档案</h2>
-    <p class="section-subtitle">最新入库的异常项目档案</p>
-    <div class="anomaly-grid" id="recentGrid"></div>
-    <div style="text-align:center;margin-top:32px;">
-      <a href="/anomalies.html" class="btn">查看全部档案</a>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-count="6">0</span>
+        <span class="hero-stat-label">收容等级</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-count="3">0</span>
+        <span class="hero-stat-label">核心使命</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-count="24">0</span>
+        <span class="hero-stat-label">小时全球响应</span>
+      </div>
     </div>
   </div>
-</section>
+
+  <a href="#classGrid" class="scroll-indicator" aria-label="向下滚动">
+    <span class="scroll-mouse"><span class="scroll-wheel"></span></span>
+  </a>
+</header>
+
+<main>
+  <section class="section reveal" id="classGrid">
+    <div class="container">
+      <h2 class="section-title">等级体系</h2>
+      <p class="section-subtitle">异常项目依其性质与危险程度分为十个等级</p>
+      <div class="anomaly-grid" id="classGridInner"></div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <h2 class="section-title">近期档案</h2>
+      <p class="section-subtitle">最新入库的异常项目档案</p>
+      <div class="anomaly-grid" id="recentGrid"></div>
+      <div style="text-align:center;margin-top:32px;">
+        <a href="/anomalies.html" class="btn btn-outline">查看全部档案</a>
+      </div>
+    </div>
+  </section>
+</main>
 
 <footer class="footer">
   <div class="container">
-    <p class="footer-text">MAS FOUNDATION &copy; 2026 | 本网站内容仅供授权人员查阅</p>
+    <p class="footer-text">MAS ASSOCIATION &copy; 2026 | 本网站内容仅供授权人员查阅</p>
     <p class="footer-text" style="margin-top:4px;">未经授权访问将受到法律追究</p>
   </div>
 </footer>
@@ -72,25 +116,113 @@
     this.classList.toggle('open');
     document.getElementById('navbarLinks').classList.toggle('open');
   });
+
+  var navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', function() {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
 })();
+
+(function() {
+  var phrases = [
+    'Malignance Administration & Security',
+    '收容异常，保护常态',
+    'SCP CLASSIFICATION PROTOCOL',
+    '维持文明的最后一道防线'
+  ];
+  var el = document.getElementById('typeTarget');
+  var phraseIndex = 0;
+  var charIndex = 0;
+  var deleting = false;
+
+  function tick() {
+    var current = phrases[phraseIndex];
+    if (!deleting) {
+      charIndex++;
+      el.textContent = current.substring(0, charIndex);
+      if (charIndex === current.length) {
+        deleting = true;
+        setTimeout(tick, 2000);
+        return;
+      }
+      setTimeout(tick, 70);
+    } else {
+      charIndex--;
+      el.textContent = current.substring(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(tick, 400);
+        return;
+      }
+      setTimeout(tick, 30);
+    }
+  }
+  setTimeout(tick, 1200);
+})();
+
+(function() {
+  function animateCount(el) {
+    var target = parseInt(el.dataset.count, 10);
+    var duration = 1800;
+    var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.hero-stat-num').forEach(animateCount);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  observer.observe(document.querySelector('.hero-stats'));
+})();
+
+(function() {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+})();
+
 (function() {
   const classes = [
-    { name: 'Safe', desc: '易于安全收容的异常项目', color: 'var(--safe)' },
-    { name: 'Euclid', desc: '需要更多资源收容的异常项目', color: 'var(--euclid)' },
-    { name: 'Keter', desc: '极难持续安全收容的异常项目', color: 'var(--keter)' },
-    { name: 'Thaumiel', desc: '用于收容其他异常的辅助项目', color: 'var(--thaumiel)' },
-    { name: 'Apollyon', desc: '无法收容的世界级威胁', color: 'var(--apollyon)' },
-    { name: 'Neutralized', desc: '已被摧毁或失去异常特性', color: 'var(--neutralized)' }
+    { name: 'S', label: '安全', desc: '易于安全收容的异常项目，威胁在可控范围内', color: 'var(--class-s)' },
+    { name: 'A', label: '实用', desc: '可被协会利用或辅助收容其他异常的异常项目', color: 'var(--class-a)' },
+    { name: 'N', label: '自然', desc: '源于自然或天然形成的异常现象，危险度较低', color: 'var(--class-n)' },
+    { name: 'C', label: '可控', desc: '需要专门手段与资源方能稳定控制的异常项目', color: 'var(--class-c)' },
+    { name: 'D', label: '神性', desc: '被推测具有神性或超越维度的存在与造物', color: 'var(--class-d)' },
+    { name: 'P', label: '危险', desc: '对人员与常态构成显著威胁，须严加收容', color: 'var(--class-p)' },
+    { name: 'M', label: '气象', desc: '与异常气象、天象及空间扭曲相关的异常', color: 'var(--class-m)' },
+    { name: 'I', label: '无形', desc: '难以观测或定义的异常存在，常在感知之外', color: 'var(--class-i)' },
+    { name: 'R', label: '毁灭', desc: '具有大规模毁灭潜力的高危异常项目', color: 'var(--class-r)' },
+    { name: 'E', label: '消逝', desc: '已失去异常特性或被彻底无效化的项目', color: 'var(--class-e)' }
   ];
 
-  const classGrid = document.getElementById('classGrid');
-  classes.forEach(cls => {
+  const classGrid = document.getElementById('classGridInner');
+  classes.forEach((cls, idx) => {
     const card = document.createElement('div');
     card.className = 'anomaly-card';
     card.style.borderLeft = `3px solid ${cls.color}`;
+    card.style.animationDelay = `${idx * 0.06}s`;
     card.innerHTML = `
       <span class="class-badge ${cls.name}">${cls.name}</span>
-      <h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">${cls.name} 级</h3>
+      <h3 style="font-family:var(--font-mono);font-size:16px;margin-top:12px;margin-bottom:8px;">${cls.name} 级 · ${cls.label}</h3>
       <p style="font-size:13px;color:var(--text-secondary);">${cls.desc}</p>
     `;
     card.onclick = () => { window.location.href = `/anomalies.html?class=${cls.name}`; };
@@ -103,13 +235,14 @@
       grid.innerHTML = '<div class="empty">暂无档案</div>';
       return;
     }
-    data.items.forEach(item => {
+    data.items.forEach((item, idx) => {
       const card = document.createElement('div');
       card.className = 'anomaly-card';
+      card.style.animationDelay = `${idx * 0.08}s`;
       card.innerHTML = `
         <div class="anomaly-card-header">
           <span class="anomaly-card-id">${item.item_number}</span>
-          <span class="class-badge ${item.class}">${item.class}</span>
+          <span class="class-badge ${item.class}">${classLabel(item.class)}</span>
         </div>
         <div class="anomaly-card-title">${item.title}</div>
         <div class="anomaly-card-desc">${item.description.replace(/\n/g, ' ').substring(0, 120)}...</div>

@@ -80,7 +80,7 @@
         return '<div class="anomaly-card" style="border-left:3px solid var(--euclid);">' +
           '<div class="anomaly-card-header">' +
             '<span class="anomaly-card-id">' + item.item_number + '</span>' +
-            '<span class="class-badge ' + item.class + '">' + item.class + '</span>' +
+            '<span class="class-badge ' + item.class + '">' + classLabel(item.class) + '</span>' +
           '</div>' +
           '<div class="anomaly-card-title">' + item.title + '</div>' +
           '<div class="anomaly-card-desc">' + item.description.replace(/\n/g, ' ').substring(0, 150) + '...</div>' +
@@ -148,7 +148,7 @@
       document.getElementById('detailContent').innerHTML =
         '<div class="detail-meta">' +
           '<span class="detail-id">' + item.item_number + '</span>' +
-          '<span class="class-badge ' + item.class + '">' + item.class + '</span>' +
+          '<span class="class-badge ' + item.class + '">' + classLabel(item.class) + '</span>' +
         '</div>' +
         '<h1 class="detail-title">' + item.title + '</h1>' +
         '<div class="detail-divider"></div>' +

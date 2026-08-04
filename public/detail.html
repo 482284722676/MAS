@@ -15,12 +15,10 @@
       <span></span><span></span><span></span>
     </button>
     <ul class="navbar-links" id="navbarLinks">
-      <li><a href="/" target="_blank">首页</a></li>
-      <li><a href="/anomalies.html" target="_blank">异常档案</a></li>
-      <li><a href="/submit.html" target="_blank">提交档案</a></li>
-      <li><a href="/about.html" target="_blank">关于</a></li>
-      <li><a href="/report.html" target="_blank">意见建议</a></li>
-      <li><a href="/admin/login.html" target="_blank">管理入口</a></li>
+      <li><a href="/">首页</a></li>
+      <li><a href="/anomalies.html">异常档案</a></li>
+      <li><a href="/about.html">关于</a></li>
+      <li><a href="/report.html">投稿联络</a></li>
     </ul>
   </div>
 </nav>
@@ -33,7 +31,7 @@
 
 <footer class="footer">
   <div class="container">
-    <p class="footer-text">MAS FOUNDATION &copy; 2026 | [机密档案]</p>
+    <p class="footer-text">MAS ASSOCIATION &copy; 2026 | [机密档案]</p>
   </div>
 </footer>
 
@@ -64,7 +62,7 @@
         <a href="/anomalies.html" class="back-link">&larr; 返回档案列表</a>
         <div class="detail-meta">
           <span class="detail-id">${item.item_number}</span>
-          <span class="class-badge ${item.class}">${item.class}</span>
+          <span class="class-badge ${item.class}">${classLabel(item.class)}</span>
         </div>
         <h1 class="detail-title">${item.title}</h1>
       </div>
